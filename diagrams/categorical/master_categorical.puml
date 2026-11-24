@@ -1,0 +1,48 @@
+@startuml
+' Hand-written EER master (categorical level). Detail: modules/people_roles.puml, modules/finance_payer.puml
+!include ../_style.iuml
+allowmixing
+title Categorical (EER) - MASTER: every specialization and category in the design
+
+package "people" {
+  entity "Person" as Person <<temporal>>
+  entity "Student" as Student
+  entity "Guardian" as Guardian
+  entity "Employee" as Employee
+  entity "Teacher" as Teacher
+  usecase "o" as O1
+  usecase "d" as D1
+}
+package "finance" {
+  entity "Sponsor" as Sponsor
+  entity "Payer" as Payer
+  usecase "U" as U1
+}
+Person -- O1 : partial
+O1 --> Student : subset
+O1 --> Guardian : subset
+O1 --> Employee : subset
+Employee -- D1 : partial
+D1 --> Teacher : subset
+
+Guardian -- U1 : partial
+Sponsor -- U1 : partial
+U1 -[thickness=3]-> Payer : subset (total)
+
+note as N1
+  **Specializations found: 2.  Categories found: 1.**
+  1. Person {Student, Guardian, Employee}: OVERLAPPING, PARTIAL
+  2. Employee {Teacher}: single subclass, PARTIAL
+  3. Payer = CATEGORY of Guardian U Sponsor: TOTAL on the category side
+  Modules with no meaningful specialization (none invented):
+  organization, iam, academic, enrollment, timetable,
+  attendance, assessment, audit, finance (apart from Payer).
+  Status values (e.g. invoice status) are states, not subtypes.
+  Justification: docs/CATEGORICAL_MODEL.md
+end note
+
+legend bottom
+  single line = partial participation, thick line = total participation
+  o = overlapping, d = disjoint, U = category (union), subset = subclass
+endlegend
+@enduml

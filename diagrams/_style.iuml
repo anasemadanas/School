@@ -1,0 +1,46 @@
+' Shared style for every diagram in this project (included with !include).
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam titleFontSize 15
+skinparam linetype polyline
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam packageStyle rectangle
+hide circle
+hide empty members
+
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2F4F6F
+  ArrowColor #2F4F6F
+  HeaderBackgroundColor #DCE8F5
+  BackgroundColor<<lookup>> #EEF6EE
+  HeaderBackgroundColor<<lookup>> #CFE8CF
+  BackgroundColor<<temporal>> #FFF7E6
+  HeaderBackgroundColor<<temporal>> #FFE2A8
+  BackgroundColor<<history>> #F4F4F4
+  BackgroundColor<<external>> #F0F0F0
+  BorderColor<<external>> #9A9A9A
+  FontColor<<external>> #6A6A6A
+  BackgroundColor<<reserved>> #FAFAFA
+  BorderColor<<reserved>> #B0B0B0
+  FontColor<<reserved>> #8A8A8A
+  BorderStyle<<reserved>> dashed
+}
+skinparam package {
+  BorderColor #7A8FA6
+  FontColor #2F4F6F
+  BackgroundColor<<reserved>> #FBFBFB
+  BorderColor<<reserved>> #B0B0B0
+  BorderStyle<<reserved>> dashed
+}
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #C8B560
+}
+skinparam legend {
+  BackgroundColor #FAFAFA
+  BorderColor #BBBBBB
+  FontSize 10
+}

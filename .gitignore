@@ -1,0 +1,11 @@
+# Secrets — never commit
+.env
+.env.*
+
+# Rendered diagram output
+diagrams/**/*.png
+diagrams/**/*.svg
+
+# Python
+__pycache__/
+*.pyc

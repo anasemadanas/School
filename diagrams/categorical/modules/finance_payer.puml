@@ -1,0 +1,42 @@
+@startuml
+' Hand-written EER diagram (categorical level): a true category / union type.
+!include ../../_style.iuml
+allowmixing
+title Categorical (EER) - Finance: Payer as a category (union type) of Guardian and Sponsor
+
+entity "Guardian\n(people.Guardians)" as Guardian
+entity "Sponsor\n(finance.Sponsors)" as Sponsor
+entity "Payer\n(finance.Payers)" as Payer
+entity "Invoice\n(finance.Invoices)" as Invoice
+entity "Payment\n(finance.Payments)" as Payment
+
+usecase "U" as U
+
+' Superclasses of the category: partial participation (not every guardian
+' or sponsor is a payer).
+Guardian -- U : partial
+Sponsor -- U : partial
+' Category side: total - every Payer is exactly one Guardian OR one Sponsor.
+U -[thickness=3]-> Payer : subset (total)
+
+Payer ||--o{ Invoice : is billed
+Payer ||--o{ Payment : pays
+
+note right of U
+  **U = CATEGORY (union type)**
+  Payer is a subset of Guardian U Sponsor, and each Payer row is exactly one of them.
+  Discriminator: Payers.PayerType IN ('Guardian','Sponsor')
+  Enforced by CK_Payers_ExactlyOne:
+    Guardian -> GuardianId NOT NULL, SponsorId NULL
+    Sponsor  -> SponsorId NOT NULL, GuardianId NULL
+  One payer row per guardian / sponsor:
+    IX_Payers_GuardianId, IX_Payers_SponsorId (filtered UNIQUE)
+  Payer has its own surrogate key because the two superclasses
+  have different keys (people.Persons vs finance.Sponsors).
+end note
+
+legend bottom
+  single line = partial participation, thick line = total participation
+  U = category (union), subset = subclass of superclass
+endlegend
+@enduml

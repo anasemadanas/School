@@ -1,0 +1,48 @@
+@startuml
+' Hand-written EER diagram (categorical level). Implementation: shared-primary-key subtype tables.
+!include ../../_style.iuml
+allowmixing
+title Categorical (EER) - People: generalization / specialization of Person
+
+entity "Person\n(people.Persons)" as Person <<temporal>>
+entity "Student\n(people.Students)" as Student
+entity "Guardian\n(people.Guardians)" as Guardian
+entity "Employee\n(people.Employees)" as Employee
+entity "Teacher\n(people.Teachers)" as Teacher
+
+usecase "o" as OverlapPerson
+usecase "d" as DisjointEmployee
+
+' Partial participation of the superclass (single line): a Person may hold no role
+' (e.g. an applicant or a contact), so not every Person is specialised.
+Person -- OverlapPerson : partial
+OverlapPerson --> Student : subset
+OverlapPerson --> Guardian : subset
+OverlapPerson --> Employee : subset
+
+' Teacher is a specialization of Employee (not a sibling of it).
+Employee -- DisjointEmployee : partial
+DisjointEmployee --> Teacher : subset
+
+note right of OverlapPerson
+  **o = OVERLAPPING** specialization of Person
+  One person may be Student, Guardian and Employee at the
+  same time (e.g. a teacher who is a parent of a student).
+  Defining attribute: none - role = existence of subtype row.
+  Participation: **PARTIAL** (persons with no role are valid:
+  applicants, emergency contacts).
+  Implemented by: PK of each subtype = FK to people.Persons.
+  Roles view: people.vw_PersonRoles
+end note
+
+note right of DisjointEmployee
+  Employee -> Teacher: single subclass, PARTIAL
+  (accountants, registrars are employees but not teachers).
+  Teachers.PersonId = PK and FK to people.Employees.
+end note
+
+legend bottom
+  single line = partial participation, thick line = total participation
+  o = overlapping, d = disjoint, subset = "is a subclass of"
+endlegend
+@enduml
